@@ -1,15 +1,18 @@
 package omniapi;
 
-import org.osbot.rs07.api.model.Entity;
-import org.osbot.rs07.api.ui.RS2Widget;
+import omniapi.api.Constants;
 
+import org.osbot.rs07.api.ui.RS2Widget;
+import org.osbot.rs07.script.ScriptManifest;
+
+@ScriptManifest(author = "Bobrocket", info = "testing", logo = "", name = "OmniAPI", version = 0)
 public class Test extends OmniScript {
 
 	@Override
 	public int onLoop() throws InterruptedException {
-		Entity man = getEntityFinder().findClosest("Man");
+		getNPCFinder().findClosest("Man").attack();
 		RS2Widget closeButton = getWidgetFinder().findFromAction("Close", (widget) -> (widget.getSpriteIndex1() == 535));
-		return 0;
+		return Constants.TICK * 10;
 	}
 
 }

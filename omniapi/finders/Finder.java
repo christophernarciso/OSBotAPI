@@ -3,19 +3,21 @@ package omniapi.finders;
 import java.util.Comparator;
 
 import org.osbot.rs07.api.map.Position;
-import org.osbot.rs07.script.Script;
 
-import omniapi.api.ScriptEmulator;
-
+import omniapi.OmniScript;
 public abstract class Finder<T> extends VirtualFinder<T> {
 	
 	
-	public Finder(Script script) {
+	public Finder(OmniScript script) {
 		super(script);
 	}
 	
 	public T findClosest(String name) {
 		return find(name, FinderDistance.CLOSEST);
+	}
+	
+	public boolean canFind(String name) {
+		return (findClosest(name) != null);
 	}
 	
 	public T findClosest(String name, FinderCondition<T> condition) {

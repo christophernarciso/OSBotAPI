@@ -4,12 +4,13 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.osbot.rs07.api.model.NPC;
-import org.osbot.rs07.script.Script;
+import omniapi.OmniScript;
+
+import omniapi.data.NPC;
 
 public class NPCFinder extends Finder<NPC> {
 
-	public NPCFinder(Script script) {
+	public NPCFinder(OmniScript script) {
 		super(script);
 	}
 
@@ -20,18 +21,18 @@ public class NPCFinder extends Finder<NPC> {
 
 	@Override
 	public NPC findThatMeetsCondition(String name, FinderCondition<NPC> condition, FinderDistance distance) {
-		Stream<NPC> npcs = getNpcs().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
+		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
 		Optional<NPC> npc = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? npcs.max(getComparatorForDistance(distance)) : npcs.min(getComparatorForDistance(distance)));
 		
-		return npc.orElse(null);
+		return (last = npc.orElse(null));
 	}
 
 	@Override
 	public NPC findThatMeetsCondition(FinderCondition<NPC> condition, FinderDistance distance) {
-		Stream<NPC> npcs = getNpcs().getAll().stream().filter(target -> (condition.meetsCondition(target)));
+		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (condition.meetsCondition(target)));
 		Optional<NPC> npc = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? npcs.max(getComparatorForDistance(distance)) : npcs.min(getComparatorForDistance(distance)));
 		
-		return npc.orElse(null);
+		return (last = npc.orElse(null));
 	}
 	
 	@Override

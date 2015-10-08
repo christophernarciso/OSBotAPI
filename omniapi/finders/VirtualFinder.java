@@ -1,14 +1,25 @@
 package omniapi.finders;
 
-import org.osbot.rs07.script.Script;
+import omniapi.OmniScript;
+import omniapi.api.OmniScriptEmulator;
 
-import omniapi.api.ScriptEmulator;
+public abstract class VirtualFinder<T> extends OmniScriptEmulator<OmniScript> {
 
-public abstract class VirtualFinder<T> extends ScriptEmulator<Script> {
-
-	public VirtualFinder(Script script) {
+	protected T last;
+	
+	public VirtualFinder(OmniScript script) {
 		super(script);
 	}
 
 	public abstract T find(FinderCondition<T> condition);
+	
+	public boolean canFind(FinderCondition<T> condition) {
+		return (find(condition) != null);
+	}
+	
+	
+	
+	public T getLastFound() {
+		return last;
+	}
 }

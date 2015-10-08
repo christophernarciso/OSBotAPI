@@ -2,6 +2,7 @@ package omniapi.api;
 
 import org.osbot.rs07.Bot;
 import org.osbot.rs07.antiban.AntiBan;
+import org.osbot.rs07.api.Bank;
 import org.osbot.rs07.api.Camera;
 import org.osbot.rs07.api.Chatbox;
 import org.osbot.rs07.api.Client;
@@ -42,7 +43,7 @@ import org.osbot.rs07.script.Script;
 
 public class ScriptEmulator<S extends Script> {
 
-	private S script;
+	protected S script;
 	
 	public ScriptEmulator(S script) {
 		setScript(script);
@@ -215,5 +216,9 @@ public class ScriptEmulator<S extends Script> {
 	
 	protected Players getPlayers() {
 		return script.getPlayers();
+	}
+	
+	protected Bank getBank() {
+		return script.getBank();
 	}
 }

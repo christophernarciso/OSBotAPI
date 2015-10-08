@@ -4,13 +4,13 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.osbot.rs07.api.model.Entity;
-import org.osbot.rs07.api.model.RS2Object;
-import org.osbot.rs07.script.Script;
+import omniapi.OmniScript;
+
+import omniapi.data.Entity;
 
 public class EntityFinder extends Finder<Entity> {
 
-	public EntityFinder(Script script) {
+	public EntityFinder(OmniScript script) {
 		super(script);
 	}
 
@@ -21,18 +21,16 @@ public class EntityFinder extends Finder<Entity> {
 
 	@Override
 	public Entity findThatMeetsCondition(String name, FinderCondition<Entity> condition, FinderDistance distance) {
-		Stream<RS2Object> entities = getObjects().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
-		Optional<RS2Object> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
-		
-		return entity.orElse(null);
+		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
+		Optional<Entity> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
+		return (last = entity.orElse(null));
 	}
 
 	@Override
 	public Entity findThatMeetsCondition(FinderCondition<Entity> condition, FinderDistance distance) {
-		Stream<RS2Object> entities = getObjects().getAll().stream().filter(target -> (condition.meetsCondition(target)));
-		Optional<RS2Object> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
-		
-		return entity.orElse(null);
+		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (condition.meetsCondition(target)));
+		Optional<Entity> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
+		return (last = entity.orElse(null));
 	}
 
 	@Override
