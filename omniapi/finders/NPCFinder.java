@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-
+import omniapi.data.DefaultNPC;
 import omniapi.data.NPC;
 
 public class NPCFinder extends Finder<NPC> {
@@ -24,7 +24,7 @@ public class NPCFinder extends Finder<NPC> {
 		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
 		Optional<NPC> npc = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? npcs.max(getComparatorForDistance(distance)) : npcs.min(getComparatorForDistance(distance)));
 		
-		return (last = npc.orElse(null));
+		return (last = npc.orElse(new DefaultNPC(getScript())));
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class NPCFinder extends Finder<NPC> {
 		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (condition.meetsCondition(target)));
 		Optional<NPC> npc = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? npcs.max(getComparatorForDistance(distance)) : npcs.min(getComparatorForDistance(distance)));
 		
-		return (last = npc.orElse(null));
+		return (last = npc.orElse(new DefaultNPC(getScript())));
 	}
 	
 	@Override

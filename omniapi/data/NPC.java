@@ -79,6 +79,7 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 
 	@Override
 	public boolean isVisible() {
+		if (!exists()) return false;
 		return child.isVisible();
 	}
 
@@ -95,6 +96,7 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 
 	@Override
 	public boolean hasAction(String... actions) {
+		if (!exists()) return false;
 		return child.hasAction(actions);
 	}
 
@@ -119,6 +121,7 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 	
 	@Override
 	public boolean hover() {
+		if (!exists()) return false;
 		return child.hover();
 	}
 
@@ -153,26 +156,32 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 	}
 	
 	public int getHealth() {
+		if (!exists()) return -1;
 		return child.getHealth();
 	}
 	
 	public boolean isUnderAttack() {
+		if (!exists()) return false;
 		return child.isUnderAttack();
 	}
 	
 	public boolean isAttackable() {
+		if (!exists()) return false;
 		return hasAction("Attack") && (getHealth() > 0);
 	}
 	
 	public boolean isAnimating() {
+		if (!exists()) return false;
 		return child.isAnimating();
 	}
 	
 	public boolean isMoving() {
+		if (!exists()) return false;
 		return child.isMoving();
 	}
 	
 	public boolean isAlive() {
+		if (!exists()) return false;
 		return (getHealth() != 0);
 	}
 }

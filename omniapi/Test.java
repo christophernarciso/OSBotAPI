@@ -10,7 +10,8 @@ public class Test extends OmniScript {
 
 	@Override
 	public int onLoop() throws InterruptedException {
-		getNPCFinder().findClosest("Man").attack();
+		//getNpcs().closest("Dwarf").interact("Attack");
+		getNPCFinder().findClosest("Dwarf").attack();
 		RS2Widget closeButton = getWidgetFinder().findFromAction("Close", (widget) -> (widget.getSpriteIndex1() == 535));
 		return Constants.TICK * 10;
 	}

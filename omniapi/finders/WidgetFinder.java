@@ -61,6 +61,8 @@ public class WidgetFinder extends VirtualFinder<RS2Widget> {
 	
 	/* Private methods */
 	private boolean widgetHasMethod(RS2Widget widget, String action) {
+		if (widget == null) return false;
+		if (widget.getInteractActions() == null || widget.getInteractActions().length <= 1) return false;
 		List<String> actions = Arrays.asList(widget.getInteractActions());
 		return actions.stream().filter(str -> (str != null && str.equalsIgnoreCase(action))).findAny().orElse(null) != null;
 	}
