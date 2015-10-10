@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-
+import omniapi.data.DefaultEntity;
 import omniapi.data.Entity;
 
 public class EntityFinder extends Finder<Entity> {
@@ -23,14 +23,14 @@ public class EntityFinder extends Finder<Entity> {
 	public Entity findThatMeetsCondition(String name, FinderCondition<Entity> condition, FinderDistance distance) {
 		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (target != null && target.exists() && target.getName().equalsIgnoreCase(name) && condition.meetsCondition(target)));
 		Optional<Entity> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
-		return (last = entity.orElse(null));
+		return (last = entity.orElse(new DefaultEntity(getScript())));
 	}
 
 	@Override
 	public Entity findThatMeetsCondition(FinderCondition<Entity> condition, FinderDistance distance) {
 		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (condition.meetsCondition(target)));
 		Optional<Entity> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
-		return (last = entity.orElse(null));
+		return (last = entity.orElse(new DefaultEntity(getScript())));
 	}
 
 	@Override

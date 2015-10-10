@@ -1,12 +1,16 @@
 package omniapi.data;
 
+import java.awt.Rectangle;
+
 import org.osbot.rs07.api.def.EntityDefinition;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Model;
+import org.osbot.rs07.api.util.GraphicUtilities;
 
 import omniapi.OmniScript;
 import omniapi.api.OmniScriptEmulator;
+import omniapi.interact.NPCInteractor;
 
 public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 
@@ -89,7 +93,7 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 	}
 
 	@Override
-	public boolean examine() {
+	public boolean examine() throws InterruptedException {
 		if (!isAlive()) return false;
 		return interact("Examine");
 	}
@@ -100,31 +104,100 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 		return child.hasAction(actions);
 	}
 
-	@Override
-	public boolean interact(String... interactions) {
-		if (!exists() || !isAlive()) return false;
+	public boolean interact(boolean sleep, String... interactions) throws InterruptedException {
+		if (!exists()) return false;
 		if (!hasAction(interactions)) return false;
 		if (!child.isVisible()) getCamera().toEntity(child);
-		return child.interact(interactions);
+		for (String interaction : interactions) {
+			 if (!new NPCInteractor(getScript()).setNPC(this).shrinkRectangle(8).interact(interaction, sleep, 5)) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean interact(String... interactions) throws InterruptedException {
+		return interact(true, interactions);
 	}
 	
 	/* Custom interaction methods for ease of use :D */
-	public boolean attack() {
+	public boolean attack() throws InterruptedException {
 		if (!isAttackable() || isUnderAttack() || myPlayer().isUnderAttack()) return false;
 		return interact("Attack");
 	}
 	
-	public boolean pickpocket() {
+	public boolean pickpocket() throws InterruptedException {
 		if (isUnderAttack() || myPlayer().isUnderAttack()) return false;
 		return interact("Pickpocket");
+	}
+	
+	public boolean hover(boolean reHover) {
+		if (!exists()) return false;
+		if (!reHover && GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel()).contains(getMouse().getPosition())) return true;
+		
+		int mouseX = (int) getMouse().getPosition().getX();
+		int mouseY = (int) getMouse().getPosition().getY();
+		
+		Rectangle rect = GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel());
+		
+		int startX = (int) rect.getX() + 8;
+		int startY = (int) rect.getY() + 8;
+		int centreX = (int)(rect.getX() + (rect.getWidth() / 2));
+		int centreY = (int)(rect.getY() + (rect.getHeight() / 2));
+		int endX = (int)(rect.getX() + rect.getWidth()) - 8;
+		int endY = (int)(rect.getY() + rect.getHeight()) - 8;
+		
+		/*
+		 * We want to split our bounding box into the following conditions:
+		 * Between start and finish -> skewed random point from the x/y within rect
+		 * Before start -> skewed random point from start x (positive)
+		 * After finish -> skewed random point from start x (negative)
+		 * */
+		
+		/*boolean north = (mouseY <= startY);
+		boolean east = (mouseX >= endX);
+		boolean south = (mouseY >= endY);
+		boolean west = (mouseX <= startX);
+		
+		boolean betweenX = (mouseX > startX) && (mouseX < endX);
+		boolean betweenY = (mouseY > startY) && (mouseY < endY);
+		
+		int finalX = 0;
+		int finalY = 0;
+		
+		if (betweenX) {
+			if (mouseX > centreX) finalX = negativeSkewedRandom(startX, mouseX);
+			else finalX = positiveSkewedRandom(mouseX, endX);
+		}
+		else {
+			if (west) finalX = positiveSkewedRandom(startX, endX);
+			else finalX = negativeSkewedRandom(startX, endX);
+		}
+		
+		if (betweenY) {
+			if (mouseY > centreY) finalY = negativeSkewedRandom(startY, mouseY);
+			else finalY = positiveSkewedRandom(mouseY, endY);
+		}
+		else {
+			if (north) finalY = positiveSkewedRandom(startY, endY);
+			else finalY = negativeSkewedRandom(startY, endY);
+		}*/
+		
+		int finalX = rand(startX, endX);
+		int finalY = rand(startY, endY);
+		
+		Rectangle areaOfUncertainty = new Rectangle(finalX - 2, finalY - 2, 5, 5);
+		//debug("betweenx " + betweenX + "; betweeny " + betweenY);
+		debug(finalX + ", " + finalY);
+		return !getMouse().move(finalX, finalY);
 	}
 	
 	@Override
 	public boolean hover() {
 		if (!exists()) return false;
-		return child.hover();
+		
+		return hover(false);
 	}
-
+	
 	@Override
 	public String[] getActions() {
 		return child.getActions();

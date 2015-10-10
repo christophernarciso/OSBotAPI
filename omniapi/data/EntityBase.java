@@ -27,9 +27,9 @@ public interface EntityBase {
 	
 	public boolean isVisible();
 	public boolean exists();
-	public boolean examine();
+	public boolean examine() throws InterruptedException;
 	public boolean hasAction(String ... actions);
-	public boolean interact(String ... interactions);
+	public boolean interact(String ... interactions) throws InterruptedException;
 	public boolean hover();
 	
 	public String[] getActions();

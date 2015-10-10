@@ -5,65 +5,66 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import omniapi.OmniScript;
+import omniapi.data.DefaultWidget;
+import omniapi.data.Widget;
 
-import org.osbot.rs07.api.ui.RS2Widget;
-
-public class WidgetFinder extends VirtualFinder<RS2Widget> {
+public class WidgetFinder extends VirtualFinder<Widget> {
 
 	public WidgetFinder(OmniScript script) {
 		super(script);
 	}
 
 	@Override
-	public RS2Widget find(FinderCondition<RS2Widget> condition) {
-		return (last = getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && condition.meetsCondition(widget))).findFirst().orElse(null));
+	public Widget find(FinderCondition<Widget> condition) {
+		return (last = getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && condition.meetsCondition(widget))).findFirst().orElse(new DefaultWidget(getScript())));
 	}
 	
-	public RS2Widget findFromText(String text) {
-		return (last = getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()))).findFirst().orElse(null));
+	public Widget findFromText(String text) {
+		return (last = getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()))).findFirst().orElse(new DefaultWidget(getScript())));
 	}
 	
-	public List<RS2Widget> findAllFromText(String text) {
-		return getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()))).collect(Collectors.toList());
+	public List<Widget> findAllFromText(String text) {
+		return getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()))).collect(Collectors.toList());
 	}
 	
-	public RS2Widget findFromText(String text, FinderCondition<RS2Widget> condition) {
-		return (last = getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()) && condition.meetsCondition(widget))).findFirst().orElse(null));
+	public Widget findFromText(String text, FinderCondition<Widget> condition) {
+		return (last = getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()) && condition.meetsCondition(widget))).findFirst().orElse(new DefaultWidget(getScript())));
 	}
 	
-	public List<RS2Widget> findAllFromText(String text, FinderCondition<RS2Widget> condition) {
-		return getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()) && condition.meetsCondition(widget))).collect(Collectors.toList());
+	public List<Widget> findAllFromText(String text, FinderCondition<Widget> condition) {
+		return getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.getMessage().toLowerCase().contains(text.toLowerCase()) && condition.meetsCondition(widget))).collect(Collectors.toList());
 	}
 	
-	public RS2Widget findFromAction(String action) {
-		return (last = getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widgetHasMethod(widget, action))).findAny().orElse(null));
+	public Widget findFromAction(String action) {
+		return (last = getRSWidgets().getAll().stream().filter((widget) -> (widget.exists() && widget.hasAction(action))).findAny().orElse(new DefaultWidget(getScript())));
 	}
 	
-	public List<RS2Widget> findAllFromAction(String action) {
-		return getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widgetHasMethod(widget, action))).collect(Collectors.toList());
+	public List<Widget> findAllFromAction(String action) {
+		return getRSWidgets().getAll().stream().filter((widget) -> (widget.exists() && widget.hasAction(action))).collect(Collectors.toList());
 	}
 	
-	public RS2Widget findFromAction(String action, FinderCondition<RS2Widget> condition) {
-		return (last = getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widgetHasMethod(widget, action) && condition.meetsCondition(widget))).findAny().orElse(null));
+	public Widget findFromAction(String action, FinderCondition<Widget> condition) {
+		return (last = getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.hasAction(action) && condition.meetsCondition(widget))).findAny().orElse(new DefaultWidget(getScript())));
 	}
 	
-	public List<RS2Widget> findAllFromAction(String action, FinderCondition<RS2Widget> condition) {
-		return getWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widgetHasMethod(widget, action) && condition.meetsCondition(widget))).collect(Collectors.toList());
+	public List<Widget> findAllFromAction(String action, FinderCondition<Widget> condition) {
+		return getRSWidgets().getAll().stream().filter((widget) -> (widget != null && widget.isVisible() && widget.hasAction(action) && condition.meetsCondition(widget))).collect(Collectors.toList());
 	}
 	
-	public RS2Widget get(int root, int child) {
-		return (last = getWidgets().get(root, child));
+	public Widget get(int root, int child) {
+		return (last = new Widget(getScript(), getWidgets().get(root, child)));
 	}
 	
-	public RS2Widget get(int root, int child, int grandchild) {
-		return (last = getWidgets().get(root, child, grandchild));
+	public Widget get(int root, int child, int grandchild) {
+		return (last = new Widget(getScript(), getWidgets().get(root, child, grandchild)));
 	}
 	
 	/* Private methods */
-	private boolean widgetHasMethod(RS2Widget widget, String action) {
+	public boolean widgetHasMethod(Widget widget, String action) {
 		if (widget == null) return false;
 		if (widget.getInteractActions() == null || widget.getInteractActions().length <= 1) return false;
 		List<String> actions = Arrays.asList(widget.getInteractActions());
+		log(widget.getSpriteIndex1() == 535);
 		return actions.stream().filter(str -> (str != null && str.equalsIgnoreCase(action))).findAny().orElse(null) != null;
 	}
 }
