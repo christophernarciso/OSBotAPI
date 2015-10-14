@@ -9,6 +9,10 @@ import omniapi.data.Entities;
 import omniapi.data.NPCs;
 import omniapi.data.Widgets;
 import omniapi.debug.LogLevel;
+import omniapi.finders.EntityFinder;
+import omniapi.finders.WidgetFinder;
+import omniapi.webwalker.WebWalker;
+import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
 
 public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> {
 
@@ -19,6 +23,18 @@ public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> 
 	@Override
 	public S getScript() {
 		return script;
+	}
+	
+	public WebWalker getWebWalker() {
+		return script.getWebWalker();
+	}
+	
+	public EntityFinder getEntityFinder() {
+		return script.getEntityFinder();
+	}
+	
+	public WidgetFinder getWidgetFinder() {
+		return script.getWidgetFinder();
 	}
 	
 	public Entities getEntities() {

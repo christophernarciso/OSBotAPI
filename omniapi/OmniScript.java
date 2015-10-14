@@ -10,6 +10,9 @@ import omniapi.debug.LogLevel;
 import omniapi.finders.EntityFinder;
 import omniapi.finders.NPCFinder;
 import omniapi.finders.WidgetFinder;
+import omniapi.webwalker.WebWalker;
+import omniapi.webwalker.web.Web;
+import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
 
 import org.osbot.rs07.script.Script;
 
@@ -22,9 +25,26 @@ public abstract class OmniScript extends Script {
 	private NPCs npcs = new NPCs(this);
 	private Widgets widgets = new Widgets(this);
 	private LogLevel debug = LogLevel.LOG;
-	private DebugLogger logger = new DebugLogger(this);
+	private DebugLogger logger;
+	
+	//Valks webwalker :D
+	private WebWalker webWalker;
+	
+	public OmniScript() {
+		logger = new DebugLogger(this);
+		//log("Thanks for using OmniAPI!");
+		webWalker = new WebWalker(this);
+	}
 	
 	/* Getters */
+	public boolean isIdle() {
+		return !myPlayer().isMoving() && !myPlayer().isAnimating() && !getCombat().isFighting() && !getDialogues().inDialogue();
+	}
+	
+	public WebWalker getWebWalker() {
+		return webWalker;
+	}
+	
 	public EntityFinder getEntityFinder() {
 		return entityFinder;
 	}
@@ -64,6 +84,8 @@ public abstract class OmniScript extends Script {
 	public DebugLogger getDebugLogger() {
 		return logger;
 	}
+	
+	/* Logging */
 	
 	public void log(Object item) {
 		logger.log(item.toString());
