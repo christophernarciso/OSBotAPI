@@ -21,8 +21,8 @@ public class Test extends OmniScript {
 	public int onLoop() throws InterruptedException {
 		//getNpcs().closest("Dwarf").interact("Attack");
 		
-		getWebWalker().walkPath(new Position(3085, 3533, 0));
-		
+		//getWebWalker().walkPath(new Position(3085, 3533, 0));
+		debug(getNPCFinder().findClosest("Man").pickpocket());
 		//Widget w = 
 		//Widget w = getWidgetFinder().find((widget) -> (widget.getSpriteIndex1() == 535));
 		//debug(new EntityInteractor(this).setEntity(getEntityFinder().findClosest("Bank booth")).setItem(getInventory().getItem("Pot")).shrinkRectangle(10).interact("", true, 8));
@@ -31,7 +31,7 @@ public class Test extends OmniScript {
 		//sleep(Constants.TICK * 2);
 		//debug(getWidgetFinder().findFromAction("Close", (widget) -> (widget.getSpriteIndex1() == 535)).interact());
 		//log(w.getInteractOptions());
-		return Constants.TICK / 2;
+		return Constants.TICK;
 	}
 
 }

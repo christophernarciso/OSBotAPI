@@ -1,10 +1,14 @@
 package omniapi.api;
 
+import java.awt.Rectangle;
+
 import org.osbot.rs07.api.map.Position;
 
 public class Constants {
 
 	public static final int TICK = 600;
+	
+	public static final Rectangle SCREEN_RECT = new Rectangle(4, 4, 512, 334);
 	
 	/* Locations */
 	public static final Position VARROCK = new Position(3212, 3422, 0);

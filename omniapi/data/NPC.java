@@ -1,6 +1,9 @@
 package omniapi.data;
 
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osbot.rs07.api.def.EntityDefinition;
 import org.osbot.rs07.api.map.Area;
@@ -9,6 +12,7 @@ import org.osbot.rs07.api.model.Model;
 import org.osbot.rs07.api.util.GraphicUtilities;
 
 import omniapi.OmniScript;
+import omniapi.api.Constants;
 import omniapi.api.OmniScriptEmulator;
 import omniapi.interact.NPCInteractor;
 
@@ -134,61 +138,10 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 		if (!exists()) return false;
 		if (!reHover && GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel()).contains(getMouse().getPosition())) return true;
 		
-		int mouseX = (int) getMouse().getPosition().getX();
-		int mouseY = (int) getMouse().getPosition().getY();
+		Point hoverPoint = getDistributedRandomPoint();
 		
-		Rectangle rect = GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel());
-		
-		int startX = (int) rect.getX() + 8;
-		int startY = (int) rect.getY() + 8;
-		int centreX = (int)(rect.getX() + (rect.getWidth() / 2));
-		int centreY = (int)(rect.getY() + (rect.getHeight() / 2));
-		int endX = (int)(rect.getX() + rect.getWidth()) - 8;
-		int endY = (int)(rect.getY() + rect.getHeight()) - 8;
-		
-		/*
-		 * We want to split our bounding box into the following conditions:
-		 * Between start and finish -> skewed random point from the x/y within rect
-		 * Before start -> skewed random point from start x (positive)
-		 * After finish -> skewed random point from start x (negative)
-		 * */
-		
-		/*boolean north = (mouseY <= startY);
-		boolean east = (mouseX >= endX);
-		boolean south = (mouseY >= endY);
-		boolean west = (mouseX <= startX);
-		
-		boolean betweenX = (mouseX > startX) && (mouseX < endX);
-		boolean betweenY = (mouseY > startY) && (mouseY < endY);
-		
-		int finalX = 0;
-		int finalY = 0;
-		
-		if (betweenX) {
-			if (mouseX > centreX) finalX = negativeSkewedRandom(startX, mouseX);
-			else finalX = positiveSkewedRandom(mouseX, endX);
-		}
-		else {
-			if (west) finalX = positiveSkewedRandom(startX, endX);
-			else finalX = negativeSkewedRandom(startX, endX);
-		}
-		
-		if (betweenY) {
-			if (mouseY > centreY) finalY = negativeSkewedRandom(startY, mouseY);
-			else finalY = positiveSkewedRandom(mouseY, endY);
-		}
-		else {
-			if (north) finalY = positiveSkewedRandom(startY, endY);
-			else finalY = negativeSkewedRandom(startY, endY);
-		}*/
-		
-		int finalX = rand(startX, endX);
-		int finalY = rand(startY, endY);
-		
-		Rectangle areaOfUncertainty = new Rectangle(finalX - 2, finalY - 2, 5, 5);
-		//debug("betweenx " + betweenX + "; betweeny " + betweenY);
-		debug(finalX + ", " + finalY);
-		return !getMouse().move(finalX, finalY);
+		debug(hoverPoint.getX() + ", " + hoverPoint.getY());
+		return !getMouse().move((int)hoverPoint.getX(), (int)hoverPoint.getY()) && GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel()).contains(getMouse().getPosition());
 	}
 	
 	@Override
@@ -256,5 +209,105 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 	public boolean isAlive() {
 		if (!exists()) return false;
 		return (getHealth() != 0);
+	}
+	
+	public Point getDistributedRandom(int mouseX, int mouseY, int startX, int startY, int endX, int endY, int centreX, int centreY) {
+		/*
+		 * We want to split our bounding box into the following conditions:
+		 * Between start and finish -> skewed random point from the x/y within rect
+		 * Before start -> skewed random point from start x (positive)
+		 * After finish -> skewed random point from start x (negative)
+		 * */
+		
+		boolean north = (mouseY <= startY);
+		boolean east = (mouseX >= endX);
+		boolean south = (mouseY >= endY);
+		boolean west = (mouseX <= startX);
+		
+		boolean betweenX = (mouseX > startX) && (mouseX < endX);
+		boolean betweenY = (mouseY > startY) && (mouseY < endY);
+		
+		int finalX = 0;
+		int finalY = 0;
+		
+		if (betweenX) {
+			if (mouseX > centreX) finalX = negativeSkewedRandom(startX, mouseX);
+			else finalX = positiveSkewedRandom(mouseX, endX);
+		}
+		else {
+			if (west) finalX = positiveSkewedRandom(startX, endX);
+			else finalX = negativeSkewedRandom(startX, endX);
+		}
+		
+		if (betweenY) {
+			if (mouseY > centreY) finalY = negativeSkewedRandom(startY, mouseY);
+			else finalY = positiveSkewedRandom(mouseY, endY);
+		}
+		else {
+			if (north) finalY = positiveSkewedRandom(startY, endY);
+			else finalY = negativeSkewedRandom(startY, endY);
+		}
+		
+		return new Point(finalX, finalY);
+	}
+
+	public Point getRandomPoint() {
+		List<Point> suitablePoints = getSuitablePoints();
+		if (suitablePoints == null) return new Point(-1, -1);
+		
+		return suitablePoints.get(getRandom(0, suitablePoints.size() - 1));
+	}
+
+	public Point getDistributedRandomPoint() {
+		List<Point> suitablePoints = getSuitablePoints();
+		if (suitablePoints == null) return new Point(-1, -1);
+		
+		int mouseX = (int) getMouse().getPosition().getX();
+		int mouseY = (int) getMouse().getPosition().getY();
+		
+		Rectangle targetRect = getModel().getBoundingBox(getGridX(), getGridY(), getZ());
+		
+		int startX = (int) targetRect.getX() + 1;
+		int startY = (int) targetRect.getY() + 1;
+		int centreX = (int)(targetRect.getX() + (targetRect.getWidth() / 2));
+		int centreY = (int)(targetRect.getY() + (targetRect.getHeight() / 2));
+		int endX = (int)(targetRect.getX() + targetRect.getWidth()) - 1;
+		int endY = (int)(targetRect.getY() + targetRect.getHeight()) - 1;
+		
+		int times = 0;
+		int maxTimes = 1000;
+		
+		Point currentPoint = getDistributedRandom(mouseX, mouseY, startX, startY, endX, endY, centreX, centreY);
+		while (!suitablePoints.contains(currentPoint) && times < maxTimes) {
+			times++;
+			currentPoint = getDistributedRandom(mouseX, mouseY, startX, startY, endX, endY, centreX, centreY);
+		}
+		
+		if (times >= maxTimes) {
+			debug("Could not find suitable distributed point in npc");
+			return getRandomPoint();
+		}
+		else {
+			debug("Found suitable distributed point in npc");
+			return currentPoint;
+		}
+	}
+	
+	public ArrayList<Point> getSuitablePoints() {
+		if (this instanceof DefaultNPC || !exists()) return null; //Returning null because this should only be used internally
+		
+		short[][] coords = GraphicUtilities.getScreenCoordinates(getBot(), getGridX(), getGridY(), getZ(), getModel());
+		if (coords == null) return null; //OSBot method, could return null :^)
+		
+		ArrayList<Point> points = new ArrayList<Point>();
+		
+		for (int i = 0; i < coords.length; i++) {
+			short[] currentCoords = coords[i];
+			if (currentCoords != null && Constants.SCREEN_RECT.contains(currentCoords[0], currentCoords[1])) points.add(new Point(currentCoords[0], currentCoords[1]));
+		}
+		
+		if (points.size() == 0) return null;
+		
+		return points;
 	}
 }

@@ -1,6 +1,8 @@
 package omniapi.interact;
 
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.osbot.rs07.api.model.Item;
@@ -8,9 +10,11 @@ import org.osbot.rs07.api.ui.Option;
 import org.osbot.rs07.api.util.GraphicUtilities;
 
 import omniapi.OmniScript;
+import omniapi.api.Constants;
+import omniapi.data.DefaultNPC;
 import omniapi.data.NPC;
 
-public class NPCInteractor extends Interactor {
+public class NPCInteractor extends Interactor<NPC> {
 
 	private NPC target;
 	private Rectangle rect;
@@ -60,7 +64,7 @@ public class NPCInteractor extends Interactor {
 		if (sleep) sleep(rand(1 * deviate, 10 * deviate));
 		
 		// Right click to open the menu
-		if (!rect.contains(getMouse().getPosition())) return false;
+		//if (!rect.contains(getMouse().getPosition())) return false;
 		if (getMenuAPI().getTooltip().startsWith(interaction) && getMenuAPI().getTooltip().endsWith(target.getName())) return getMouse().click(false);
 		if (!getMouse().click(true)) return false;
 		
@@ -71,8 +75,8 @@ public class NPCInteractor extends Interactor {
 		for (int i = 0; i < options.size(); i++) {
 			Option o = options.get(i);
 			String s = o.action;
-			debug(o.name);
-			if (s.equalsIgnoreCase(interaction) && o.name.endsWith(target.getName())) {
+			//debug(o.name);
+			if (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName())) {
 				index = i;
 				break;
 			}

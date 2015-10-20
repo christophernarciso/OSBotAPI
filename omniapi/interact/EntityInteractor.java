@@ -1,6 +1,8 @@
 package omniapi.interact;
 
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.osbot.rs07.api.model.Item;
@@ -10,7 +12,7 @@ import org.osbot.rs07.api.util.GraphicUtilities;
 import omniapi.OmniScript;
 import omniapi.data.Entity;
 
-public class EntityInteractor extends Interactor {
+public class EntityInteractor extends Interactor<Entity> {
 
 	private Entity target;
 	private Rectangle rect;
@@ -72,7 +74,7 @@ public class EntityInteractor extends Interactor {
 			Option o = options.get(i);
 			String s = o.action;
 			debug(o.name);
-			if (s.equalsIgnoreCase(interaction) && o.name.endsWith(target.getName())) {
+			if (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName())) {
 				index = i;
 				break;
 			}
