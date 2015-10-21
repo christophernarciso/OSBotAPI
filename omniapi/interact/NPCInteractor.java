@@ -59,7 +59,7 @@ public class NPCInteractor extends Interactor<NPC> {
 			if (sleep) sleep(rand(1 * deviate, 5 * deviate));
 			if (!getMouse().click(false)) return false;
 		}
-		if (!target.hover()) return false;
+		while (!getMouse().isOnCursor(target.getRaw())) target.hover();
 		
 		if (sleep) sleep(rand(1 * deviate, 10 * deviate));
 		

@@ -21,7 +21,7 @@ public class Test extends OmniScript {
 	public int onLoop() throws InterruptedException {
 		//getNpcs().closest("Dwarf").interact("Attack");
 		
-		//getWebWalker().walkPath(new Position(3085, 3533, 0));
+		//getWebWalker().walkPath(new Position(3025, 3736, 0));
 		debug(getNPCFinder().findClosest("Man").pickpocket());
 		//Widget w = 
 		//Widget w = getWidgetFinder().find((widget) -> (widget.getSpriteIndex1() == 535));

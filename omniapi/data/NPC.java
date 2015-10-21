@@ -25,6 +25,10 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 		child = n;
 	}
 
+	public org.osbot.rs07.api.model.NPC getRaw() {
+		return child;
+	}
+	
 	@Override
 	public int getGridY() {
 		return child.getGridY();

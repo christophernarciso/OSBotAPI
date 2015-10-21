@@ -57,12 +57,13 @@ public class EntityInteractor extends Interactor<Entity> {
 			if (sleep) sleep(rand(1 * deviate, 5 * deviate));
 			if (!getMouse().click(false)) return false;
 		}
-		if (!target.hover()) return false;
+		while (!getMouse().isOnCursor(target.getRaw())) target.hover();
 		
 		if (sleep) sleep(rand(1 * deviate, 10 * deviate));
 		
 		// Right click to open the menu
-		if (!rect.contains(getMouse().getPosition())) return false;
+		//if (!rect.contains(getMouse().getPosition())) return false;
+		debug(getMenuAPI().getTooltip());
 		if (getMenuAPI().getTooltip().startsWith(interaction) && getMenuAPI().getTooltip().endsWith(target.getName())) return getMouse().click(false);
 		if (!getMouse().click(true)) return false;
 		
