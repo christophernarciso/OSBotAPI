@@ -1,5 +1,8 @@
 package omniapi;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import omniapi.api.Constants;
 import omniapi.data.Widget;
 import omniapi.debug.LogLevel;
@@ -16,13 +19,24 @@ public class Test extends OmniScript {
 	public void onStart() {
 		setLogLevel(LogLevel.WARN);
 	}
+
+	Widget depositAll;
 	
 	@Override
 	public int onLoop() throws InterruptedException {
-		//getNpcs().closest("Dwarf").interact("Attack");
 		
+		
+		//debug(getRSGrandExchange().getItemNameBySlot(0));
+		//debug(getRSGrandExchange().getAvailableSlots());
+		//debug(getWidgetFinder().get(162, 32).getMessage());
+		//debug(getRSGrandExchange().createOffer(getInventoryFinder().find("Feather"), 1));
+		//debug(getRSGrandExchange().createOffer(getInventory().getItem("Small fishing net"), 1));
+		//getNpcs().closest("Dwarf").interact("Attack");
+		/*depositAll = getWidgetFinder().get(309, 4);
+		debug(depositAll.getBounds());
+		debug(depositAll.getRectangle());*/
 		//getWebWalker().walkPath(new Position(3025, 3736, 0));
-		debug(getNPCFinder().findClosest("Man").pickpocket());
+		//debug(getNPCFinder().findClosest("Man").pickpocket());
 		//Widget w = 
 		//Widget w = getWidgetFinder().find((widget) -> (widget.getSpriteIndex1() == 535));
 		//debug(new EntityInteractor(this).setEntity(getEntityFinder().findClosest("Bank booth")).setItem(getInventory().getItem("Pot")).shrinkRectangle(10).interact("", true, 8));
@@ -34,4 +48,7 @@ public class Test extends OmniScript {
 		return Constants.TICK;
 	}
 
+	@Override
+	public void onPaint(Graphics2D g) {
+	}
 }

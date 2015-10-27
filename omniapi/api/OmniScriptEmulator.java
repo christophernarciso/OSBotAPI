@@ -5,12 +5,16 @@ import java.util.Random;
 import org.osbot.rs07.script.Script;
 
 import omniapi.OmniScript;
+import omniapi.api.sleep.SleepCondition;
+import omniapi.api.sleep.Sleeper;
 import omniapi.data.Entities;
 import omniapi.data.NPCs;
 import omniapi.data.Widgets;
 import omniapi.debug.LogLevel;
 import omniapi.finders.EntityFinder;
+import omniapi.finders.NPCFinder;
 import omniapi.finders.WidgetFinder;
+import omniapi.interfaces.RSBank;
 import omniapi.webwalker.WebWalker;
 import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
 
@@ -33,6 +37,10 @@ public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> 
 		return script.getEntityFinder();
 	}
 	
+	public NPCFinder getNPCFinder() {
+		return script.getNPCFinder();
+	}
+	
 	public WidgetFinder getWidgetFinder() {
 		return script.getWidgetFinder();
 	}
@@ -53,8 +61,25 @@ public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> 
 		return script.getRSWidgets();
 	}
 	
+	public RSBank getRSBank() {
+		return script.getRSBank();
+	}
+	
 	public LogLevel getLogLevel() {
 		return script.getLogLevel();
+	}
+	
+	public Sleeper getSleeper() {
+		return script.getSleeper();
+	}
+	
+	/* Sleeping */
+	public boolean sleepUntil(SleepCondition sc) {
+		return getSleeper().sleep(sc);
+	}
+	
+	public boolean sleepUntil(SleepCondition sc, int maxTime) {
+		return getSleeper().sleep(sc, maxTime);
 	}
 	
 	public void log(Object o) {

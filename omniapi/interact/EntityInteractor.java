@@ -41,21 +41,28 @@ public class EntityInteractor extends Interactor<Entity> {
 	}
 	
 	public boolean interact(String interaction, boolean sleep, int deviate) throws InterruptedException {
-		if (target == null || !target.hasAction(interaction)) return false;
+		if (item == null && (target == null || !target.hasAction(interaction))) return false;
 		
 		if (getMenuAPI().isOpen()) {
 			getMouse().click(false);
 			if (sleep) sleep(rand(1 * deviate, 10 * deviate));
 		}
+		debug("Interacting");
+		
+		if (getMap().distance(target.getPosition()) > 6 && !getLocalWalker().walk(target.getPosition())) return false;
 		
 		if (item != null) {
+			debug("Selecting item");
 			if (getInventory().isItemSelected() && !getInventory().getSelectedItemName().equalsIgnoreCase(item.getName())) {
 				getInventory().deselectItem();
 				if (sleep) sleep(rand(10 * deviate, 25 * deviate));
 			}
 			if (!item.hover()) return false;
+			debug("Hovered");
 			if (sleep) sleep(rand(1 * deviate, 5 * deviate));
 			if (!getMouse().click(false)) return false;
+			debug("Clicked");
+			interaction = "Use " + item.getName() + " -> " + target.getName(); 
 		}
 		while (!getMouse().isOnCursor(target.getRaw())) target.hover();
 		
@@ -75,7 +82,7 @@ public class EntityInteractor extends Interactor<Entity> {
 			Option o = options.get(i);
 			String s = o.action;
 			debug(o.name);
-			if (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName())) {
+			if ((item != null && getMenuAPI().stripFormatting(o.name).endsWith(target.getName())) || (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName()))) {
 				index = i;
 				break;
 			}

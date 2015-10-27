@@ -8,7 +8,7 @@ import omniapi.OmniScript;
 import omniapi.data.DefaultEntity;
 import omniapi.data.Entity;
 
-public class EntityFinder extends Finder<Entity> {
+public class EntityFinder extends PhysicalFinder<Entity> {
 
 	public EntityFinder(OmniScript script) {
 		super(script);
@@ -28,7 +28,7 @@ public class EntityFinder extends Finder<Entity> {
 
 	@Override
 	public Entity findThatMeetsCondition(FinderCondition<Entity> condition, FinderDistance distance) {
-		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (condition.meetsCondition(target)));
+		Stream<Entity> entities = getEntities().getAll().stream().filter(target -> (target != null && target.exists() && condition.meetsCondition(target)));
 		Optional<Entity> entity = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? entities.max(getComparatorForDistance(distance)) : entities.min(getComparatorForDistance(distance)));
 		return (last = entity.orElse(new DefaultEntity(getScript())));
 	}

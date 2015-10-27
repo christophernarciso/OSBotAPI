@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 import omniapi.OmniScript;
 import omniapi.api.OmniScriptEmulator;
-import omniapi.data.EntityBase;
+import omniapi.data.PhysicalBase;
 
-public abstract class Interactor<T extends EntityBase> extends OmniScriptEmulator<OmniScript> {
+public abstract class Interactor<T extends PhysicalBase> extends OmniScriptEmulator<OmniScript> {
 
 	private final int INTERACT_MINIMUM_SIZE = 4;
 	

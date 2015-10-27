@@ -75,7 +75,8 @@ public class NPCInteractor extends Interactor<NPC> {
 		for (int i = 0; i < options.size(); i++) {
 			Option o = options.get(i);
 			String s = o.action;
-			//debug(o.name);
+			debug(o.name);
+			debug(target.getName());
 			if (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName())) {
 				index = i;
 				break;

@@ -8,6 +8,7 @@ import org.osbot.rs07.api.map.Position;
 
 import omniapi.data.DefaultEntity;
 import omniapi.data.Entity;
+
 import org.osbot.rs07.utility.ConditionalSleep;
 
 import java.util.ArrayList;
@@ -26,8 +27,15 @@ public class Walker extends OmniScriptEmulator<OmniScript> {
     }
 
     private boolean walkPath(ArrayList<WebNode> path, int distance) {
-    	/* Widget checking here */
-    	getWidgetFinder().findFromText("Enter Wilderness").interact();
+    	/* Widget checking here 
+    	 * Just going to try/catch because I cba to fix any throwing
+    	 * TODO
+    	 * */
+    	try {
+			getWidgetFinder().findFromText("Enter Wilderness").interact();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         Position myPos = context.myPosition();
         WebNode last = path.get(path.size() - 1);
         WebNode next = nextPosition(path, 10);

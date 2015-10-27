@@ -12,6 +12,28 @@ Walking given a start and finish:
 getWebWalker().walkPath(startPosition, finishPosition);
 </pre>
 
+# Sleeping
+Sleeping is simpler in OmniAPI:
+<pre>
+sleepUntil(() -> (myPlayer().isAnimating()));
+</pre>
+
+<b>sleepUntil()</b> returns <b>TRUE</b> if the sleep was completed BEFORE the time was over, and <b>FALSE</b> if the sleep was completed because the time was over.
+
+# Interfaces (WORK IN PROGRESS)
+Interfaces are little extensions upon OmniAPI that utilise the API for certain interfaces (bank, GE etc)
+
+# Basic GE usage
+<pre>
+getRSGrandExchange().open();
+getRSGrandExchange().getAvailableSlots(); //0-8
+getRSGrandExchange().createOffer(getInventoryFinder().find("Bronze dagger"), 15); //Create an offer for Bronze Dagger for 15gp
+</pre>
+
+# Modules (WORK IN PROGRESS)
+Modules are there to mimic OSBots previous Random Solvers while still having interaction consistency with the rest of OmniAPI's interactions.
+
+
 # Finders
 Finders provide a nicer way for you to search for entities, npcs, and widgets (more to come)
 

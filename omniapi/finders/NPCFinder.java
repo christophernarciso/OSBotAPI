@@ -8,7 +8,7 @@ import omniapi.OmniScript;
 import omniapi.data.DefaultNPC;
 import omniapi.data.NPC;
 
-public class NPCFinder extends Finder<NPC> {
+public class NPCFinder extends PhysicalFinder<NPC> {
 
 	public NPCFinder(OmniScript script) {
 		super(script);
@@ -29,7 +29,7 @@ public class NPCFinder extends Finder<NPC> {
 
 	@Override
 	public NPC findThatMeetsCondition(FinderCondition<NPC> condition, FinderDistance distance) {
-		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (condition.meetsCondition(target)));
+		Stream<NPC> npcs = getNPCs().getAll().stream().filter(target -> (target != null && target.exists() && condition.meetsCondition(target)));
 		Optional<NPC> npc = ((distance.equals(FinderDistance.FURTHEST) || distance.equals(FinderDistance.FURTHEST_GAMETILES)) ? npcs.max(getComparatorForDistance(distance)) : npcs.min(getComparatorForDistance(distance)));
 		
 		return (last = npc.orElse(new DefaultNPC(getScript())));

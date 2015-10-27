@@ -2,14 +2,20 @@ package omniapi;
 
 import java.util.Random;
 
+import omniapi.api.sleep.SleepCondition;
+import omniapi.api.sleep.Sleeper;
 import omniapi.data.Entities;
 import omniapi.data.NPCs;
 import omniapi.data.Widgets;
 import omniapi.debug.DebugLogger;
 import omniapi.debug.LogLevel;
+import omniapi.finders.BankFinder;
 import omniapi.finders.EntityFinder;
+import omniapi.finders.InventoryFinder;
 import omniapi.finders.NPCFinder;
 import omniapi.finders.WidgetFinder;
+import omniapi.interfaces.RSBank;
+import omniapi.interfaces.RSGrandExchange;
 import omniapi.webwalker.WebWalker;
 import omniapi.webwalker.web.Web;
 import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
@@ -21,11 +27,19 @@ public abstract class OmniScript extends Script {
 	private EntityFinder entityFinder = new EntityFinder(this);
 	private NPCFinder npcFinder = new NPCFinder(this);
 	private WidgetFinder widgetFinder = new WidgetFinder(this);
+	private BankFinder bankFinder = new BankFinder(this);
+	private InventoryFinder inventoryFinder = new InventoryFinder(this);
+	
 	private Entities entities = new Entities(this);
 	private NPCs npcs = new NPCs(this);
 	private Widgets widgets = new Widgets(this);
 	private LogLevel debug = LogLevel.LOG;
 	private DebugLogger logger;
+	private Sleeper sleeper = new Sleeper(this, 25);
+	
+	/* Interfaces */
+	private RSBank rsBank = new RSBank(this);
+	private RSGrandExchange rsGrandExchange = new RSGrandExchange(this);
 	
 	//Valks webwalker :D
 	private WebWalker webWalker;
@@ -57,6 +71,14 @@ public abstract class OmniScript extends Script {
 		return widgetFinder;
 	}
 	
+	public BankFinder getBankFinder() {
+		return bankFinder;
+	}
+	
+	public InventoryFinder getInventoryFinder() {
+		return inventoryFinder;
+	}
+	
 	public Entities getEntities() {
 		return entities;
 	}
@@ -84,6 +106,18 @@ public abstract class OmniScript extends Script {
 	public DebugLogger getDebugLogger() {
 		return logger;
 	}
+
+	public RSBank getRSBank() {
+		return rsBank;
+	}
+	
+	public RSGrandExchange getRSGrandExchange() {
+		return rsGrandExchange;
+	}
+	
+	public Sleeper getSleeper() {
+		return sleeper;
+	}
 	
 	/* Logging */
 	
@@ -97,6 +131,15 @@ public abstract class OmniScript extends Script {
 	
 	public void debug(Object item) {
 		logger.debug(item.toString());
+	}
+	
+	/* Sleeping */
+	public boolean sleepUntil(SleepCondition sc) {
+		return sleeper.sleep(sc);
+	}
+	
+	public boolean sleepUntil(SleepCondition sc, int maxTime) {
+		return sleeper.sleep(sc, maxTime);
 	}
 	
 	/* Random functions */

@@ -10,13 +10,15 @@ import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.model.Model;
 import org.osbot.rs07.api.util.GraphicUtilities;
+import org.osbot.rs07.event.CameraPitchEvent;
+import org.osbot.rs07.event.CameraYawEvent;
 
 import omniapi.OmniScript;
 import omniapi.api.Constants;
 import omniapi.api.OmniScriptEmulator;
 import omniapi.interact.NPCInteractor;
 
-public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
+public class NPC extends OmniScriptEmulator<OmniScript> implements PhysicalBase {
 
 	private org.osbot.rs07.api.model.NPC child;
 	
@@ -115,7 +117,8 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 	public boolean interact(boolean sleep, String... interactions) throws InterruptedException {
 		if (!exists()) return false;
 		if (!hasAction(interactions)) return false;
-		if (!child.isVisible()) getCamera().toEntity(child);
+		if (getMap().distance(getPosition()) > 12 && !getWebWalker().walkPath(getPosition())) return false;
+		if (!isVisible()) getCamera().toEntity(child);
 		for (String interaction : interactions) {
 			 if (!new NPCInteractor(getScript()).setNPC(this).shrinkRectangle(8).interact(interaction, sleep, 5)) return false;
 		}
@@ -138,18 +141,21 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 		return interact("Pickpocket");
 	}
 	
-	public boolean hover(boolean reHover) {
+	public boolean hover(boolean reHover) throws InterruptedException {
 		if (!exists()) return false;
 		if (!reHover && GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel()).contains(getMouse().getPosition())) return true;
 		
+		while (!isVisible()) toCamera();
+		
 		Point hoverPoint = getDistributedRandomPoint();
+		if (hoverPoint.equals(new Point(-1, -1))) return false;
 		
 		debug(hoverPoint.getX() + ", " + hoverPoint.getY());
 		return !getMouse().move((int)hoverPoint.getX(), (int)hoverPoint.getY()) && GraphicUtilities.getModelBoundingBox(getBot(), getGridX(), getGridY(), getZ(), getModel()).contains(getMouse().getPosition());
 	}
 	
 	@Override
-	public boolean hover() {
+	public boolean hover() throws InterruptedException {
 		if (!exists()) return false;
 		
 		return hover(false);
@@ -313,5 +319,52 @@ public class NPC extends OmniScriptEmulator<OmniScript> implements EntityBase {
 		if (points.size() == 0) return null;
 		
 		return points;
+	}
+
+	@Override
+	public boolean toCamera() throws InterruptedException {
+		if (!exists()) return false;
+		if (isVisible()) return true;
+		
+		int moveYaw = getCameraYaw();
+		CameraYawEvent yawEvent = new CameraYawEvent(getBot(), moveYaw);
+		yawEvent.setBlocking();
+		yawEvent.execute();
+		if (yawEvent.hasFinished()) {
+			CameraPitchEvent pitchEvent = new CameraPitchEvent(getBot(), getCameraPitch());
+			pitchEvent.setBlocking();
+			pitchEvent.execute();
+			if (pitchEvent.hasFinished()) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean walkTo() throws InterruptedException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	private int getCameraYaw() {
+		if (!exists()) return 0;
+		
+		int deg = (int) Math.toDegrees(Math.atan2(getY() - myPosition().getY(), getX() - myPosition().getX())) - 90;
+		if (deg < 0) deg += 360;
+		return deg % 360;
+	}
+	
+	private int getCameraPitch() {
+		if (!exists()) return 0;
+		
+		int height = getPosition().getTileHeight(getBot()) + getModel().getHeight();
+		int plrHeight = myPosition().getTileHeight(getBot());
+		
+		int dist = myPosition().distance(getPosition()) * 512;
+		double cos = (double) (dist + ((height + plrHeight > 0) ? -plrHeight : 0)) * 3.14E-4;
+		if (cos > 1.0) cos = 1.0;
+		
+		cos = Math.cos(cos);
+		
+		return (int) Math.round(Math.toDegrees(cos));
 	}
 }

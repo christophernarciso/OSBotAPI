@@ -1,13 +1,14 @@
 package omniapi.finders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-
-import org.osbot.rs07.api.model.Item;
+import omniapi.data.DefaultItem;
+import omniapi.data.Item;
 
 public class BankFinder extends VirtualFinder<Item> {
 
@@ -17,7 +18,7 @@ public class BankFinder extends VirtualFinder<Item> {
 
 	@Override
 	public Item find(FinderCondition<Item> condition) {
-		return (last = getBankStream().filter((item) -> (item != null && condition.meetsCondition(item))).findAny().orElse(null));
+		return (last = getBankStream().filter((item) -> (item.exists() && condition.meetsCondition(item))).findFirst().orElse(new DefaultItem(getScript())));
 	}
 	
 	public Item find(String name) {
@@ -25,23 +26,26 @@ public class BankFinder extends VirtualFinder<Item> {
 	}
 	
 	public Item find(String name, FinderCondition<Item> condition) {
-		return (last = getBankStream().filter((item) -> (item != null && item.getName().equalsIgnoreCase(name) && condition.meetsCondition(item))).findAny().orElse(null));
+		return (last = getBankStream().filter((item) -> (item.exists() && item.getName().equalsIgnoreCase(name) && condition.meetsCondition(item))).findFirst().orElse(new DefaultItem(getScript())));
 	}
 	
 	public boolean canFind(String name) {
-		return (find(name) != null);
+		return !(find(name) instanceof DefaultItem);
 	}
 	
 	public boolean canFind(String name, FinderCondition<Item> condition) {
-		return (find(name, condition) != null);
+		return !(find(name, condition) instanceof DefaultItem);
 	}
 	
 	public List<Item> findAll(FinderCondition<Item> condition) {
-		return getBankStream().filter((item) -> (item != null && condition.meetsCondition(item))).collect(Collectors.toList());
+		return getBankStream().filter((item) -> (item.exists() && condition.meetsCondition(item))).collect(Collectors.toList());
 	}
 	
 	/* Private methods */
 	private Stream<Item> getBankStream() {
-		return Arrays.asList(getBank().getItems()).stream();
+		List<Item> bankItems = new ArrayList<Item>();
+		for (org.osbot.rs07.api.model.Item item : getBank().getItems()) bankItems.add(new Item(getScript(), item));
+
+		return bankItems.stream();
 	}
 }
