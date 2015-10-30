@@ -65,7 +65,10 @@ public class NPCInteractor extends Interactor<NPC> {
 		
 		// Right click to open the menu
 		//if (!rect.contains(getMouse().getPosition())) return false;
-		if (getMenuAPI().getTooltip().startsWith(interaction) && getMenuAPI().getTooltip().endsWith(target.getName())) return getMouse().click(false);
+		String strippedTooltip = getMenuAPI().stripFormatting(getMenuAPI().getTooltip());
+		String estimatedTooltip = interaction + " " + target.getName();
+		debug("Tooltips: [" + strippedTooltip + "] [" + estimatedTooltip + "]");
+		if (strippedTooltip.startsWith(estimatedTooltip)) return getMouse().click(false);
 		if (!getMouse().click(true)) return false;
 		
 		if (sleep) sleep(rand(25 * deviate, 40 * deviate));
@@ -75,8 +78,8 @@ public class NPCInteractor extends Interactor<NPC> {
 		for (int i = 0; i < options.size(); i++) {
 			Option o = options.get(i);
 			String s = o.action;
-			debug(o.name);
-			debug(target.getName());
+			//debug(o.name);
+			//debug(target.getName());
 			if (s.equalsIgnoreCase(interaction) && getMenuAPI().stripFormatting(o.name).startsWith(target.getName())) {
 				index = i;
 				break;

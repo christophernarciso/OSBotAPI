@@ -2,6 +2,7 @@ package omniapi;
 
 import java.util.Random;
 
+import omniapi.api.nodes.NodeHandler;
 import omniapi.api.sleep.SleepCondition;
 import omniapi.api.sleep.Sleeper;
 import omniapi.data.Entities;
@@ -36,6 +37,7 @@ public abstract class OmniScript extends Script {
 	private LogLevel debug = LogLevel.LOG;
 	private DebugLogger logger;
 	private Sleeper sleeper = new Sleeper(this, 25);
+	private NodeHandler nodeHandler = new NodeHandler(this);
 	
 	/* Interfaces */
 	private RSBank rsBank = new RSBank(this);
@@ -140,6 +142,10 @@ public abstract class OmniScript extends Script {
 	
 	public boolean sleepUntil(SleepCondition sc, int maxTime) {
 		return sleeper.sleep(sc, maxTime);
+	}
+	
+	public NodeHandler getNodeHandler() {
+		return nodeHandler;
 	}
 	
 	/* Random functions */

@@ -14,7 +14,7 @@ import omniapi.data.NPC;
  * */
 public class RemoveRandoms extends Module {
 
-	private final List<String> RANDOM_LIST = Arrays.asList(new String[] {"Genie", "Rick Turpentine", "Drunken Dwarf", "Mysterious Old Man", "Dr Jekyll", "Security Guard", "Cap'n Hand", "Bee Keeper", "Drill Demon", "Evil Bob", "Freaky Forester", "Leo", "Miles", "Giles", "Niles", "Mime", "Molly", "Prison Pete", "Sandwich Lady", "Tilt", "Flippa", "Dunce", "Quiz Master" });
+	private final List<String> RANDOM_LIST = Arrays.asList(new String[] {"Genie", "Rick Turpentine", "Drunken Dwarf", "Mysterious Old Man", "Dr Jekyll", "Security Guard", "Cap'n Hand", "Bee Keeper", "Drill Demon", "Evil Bob", "Freaky Forester", "Leo", "Miles", "Giles", "Niles", "Mime", "Molly", "Prison Pete", "Sandwich Lady", "Tilt", "Flippa", "Dunce", "Quiz Master", "Postie Pete" });
 	private NPC dismissableNPC;
 	
 	public RemoveRandoms(OmniScript script) {

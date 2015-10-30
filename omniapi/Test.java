@@ -20,11 +20,15 @@ public class Test extends OmniScript {
 		setLogLevel(LogLevel.WARN);
 	}
 
-	Widget depositAll;
+	//Widget depositAll;
+	
+	int totalInteractions, failedInteractions, successfulInteractions;
 	
 	@Override
 	public int onLoop() throws InterruptedException {
 		
+		if (getNPCFinder().findClosest("Man", (npc) -> (getMap().canReach(npc.getPosition()))).interact("Talk-to")) successfulInteractions++;
+		else failedInteractions++;
 		
 		//debug(getRSGrandExchange().getItemNameBySlot(0));
 		//debug(getRSGrandExchange().getAvailableSlots());
@@ -50,5 +54,9 @@ public class Test extends OmniScript {
 
 	@Override
 	public void onPaint(Graphics2D g) {
+		g.drawString("OmniAPI Interaction test: moving npc", 100, 100);
+		g.drawString("Successful: " + successfulInteractions, 100, 150);
+		g.drawString("Failed: " + failedInteractions, 100, 200);
+		g.drawString("%: " + (float)(((failedInteractions) / (failedInteractions + successfulInteractions)) * 100), 100, 250);
 	}
 }
