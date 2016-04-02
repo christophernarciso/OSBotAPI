@@ -1,6 +1,7 @@
-package omniapi.data;
+package omniapi.data.def;
 
 import omniapi.OmniScript;
+import omniapi.data.NPC;
 
 public class DefaultNPC extends NPC {
 

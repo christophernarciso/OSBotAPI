@@ -1,25 +1,24 @@
-package omniapi.data;
+package omniapi.data.collection;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import omniapi.data.Entity;
 import org.osbot.rs07.api.model.RS2Object;
 
 import omniapi.OmniScript;
 import omniapi.api.Constants;
 import omniapi.api.OmniScriptEmulator;
 
-public class Entities extends OmniScriptEmulator<OmniScript> {
+public class Entities extends Collector<Entity> {
 
-	List<Entity> cache;
-	private long lastCacheTime;
-	
 	public Entities(OmniScript script) {
 		super(script);
-		cache = new ArrayList<Entity>();
+		cache = new ArrayList<>();
 		lastCacheTime = 0;
 	}
 
+	@Override
 	public List<Entity> getAll() {
 		if (System.currentTimeMillis() > (lastCacheTime + (Constants.TICK / 2))) {
 			cache.clear();

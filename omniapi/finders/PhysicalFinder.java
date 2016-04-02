@@ -43,6 +43,16 @@ public abstract class PhysicalFinder<T> extends VirtualFinder<T> {
 	public abstract T findThatMeetsCondition(FinderCondition<T> condition, FinderDistance distance);
 	
 	public abstract Comparator<T> getComparatorForDistance(FinderDistance distance);
+
+	/*public abstract T findNearMouse(String name, FinderDistance distance);
+	public abstract T findThatMeetsConditionNearMouse(String name, FinderCondition<T> condition, FinderDistance distance);
+	public abstract T findThatMeetsConditionNearMouse(FinderCondition<T> condition, FinderDistance distance);
+
+	public T findClosestNearMouse(String name, FinderCondition<T> condition) {
+		return findThatMeetsConditionNearMouse(name, condition, FinderDistance.CLOSEST);
+	}
+
+	public T findClosestNearMouse(String name) { return findNearMouse(name, FinderDistance.CLOSEST); }*/
 	
 	/*
 	 * This method estimates the distance between two points in a physical space, which is more effective than game tiles
@@ -55,7 +65,10 @@ public abstract class PhysicalFinder<T> extends VirtualFinder<T> {
 		int horizontal = Math.abs(a.getX() - b.getX());
 		int vertical = Math.abs(a.getY() - b.getY());
 		
-		if (horizontal == 0 || vertical == 0) return 0;
+		if (horizontal == 0 && vertical == 0) return 0;
+		
+		if (horizontal == 0) return vertical * horizontalCost;
+		if (vertical == 0) return horizontal * horizontalCost;
 		
 		return Math.max(horizontal, vertical) + (diagonalCost - horizontalCost) * Math.min(horizontal, vertical);
 	}

@@ -2,8 +2,7 @@ package omniapi.interfaces;
 
 import omniapi.OmniScript;
 import omniapi.api.OmniScriptEmulator;
-import omniapi.data.DefaultEntity;
-import omniapi.data.DefaultNPC;
+import omniapi.data.def.DefaultEntity;
 import omniapi.data.Entity;
 import omniapi.data.NPC;
 import omniapi.data.Widget;

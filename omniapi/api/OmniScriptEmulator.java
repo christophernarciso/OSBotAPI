@@ -7,16 +7,17 @@ import org.osbot.rs07.script.Script;
 import omniapi.OmniScript;
 import omniapi.api.sleep.SleepCondition;
 import omniapi.api.sleep.Sleeper;
-import omniapi.data.Entities;
-import omniapi.data.NPCs;
-import omniapi.data.Widgets;
+import omniapi.data.collection.Entities;
+import omniapi.data.collection.NPCs;
+import omniapi.data.collection.Widgets;
 import omniapi.debug.LogLevel;
+import omniapi.finders.BankFinder;
 import omniapi.finders.EntityFinder;
+import omniapi.finders.InventoryFinder;
 import omniapi.finders.NPCFinder;
 import omniapi.finders.WidgetFinder;
 import omniapi.interfaces.RSBank;
-import omniapi.webwalker.WebWalker;
-import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
+import omniapi.webwalker.OmniWebWalker;
 
 public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> {
 
@@ -29,7 +30,7 @@ public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> 
 		return script;
 	}
 	
-	public WebWalker getWebWalker() {
+	public OmniWebWalker getWebWalker() {
 		return script.getWebWalker();
 	}
 	
@@ -43,6 +44,14 @@ public class OmniScriptEmulator<S extends OmniScript> extends ScriptEmulator<S> 
 	
 	public WidgetFinder getWidgetFinder() {
 		return script.getWidgetFinder();
+	}
+	
+	public BankFinder getBankFinder() {
+		return script.getBankFinder();
+	}
+	
+	public InventoryFinder getInventoryFinder() {
+		return script.getInventoryFinder();
 	}
 	
 	public Entities getEntities() {

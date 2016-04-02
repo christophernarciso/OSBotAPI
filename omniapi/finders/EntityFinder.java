@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-import omniapi.data.DefaultEntity;
+import omniapi.data.def.DefaultEntity;
 import omniapi.data.Entity;
 
 public class EntityFinder extends PhysicalFinder<Entity> {

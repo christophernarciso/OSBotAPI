@@ -1,4 +1,4 @@
-package omniapi.data;
+package omniapi.data.collection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,17 @@ import java.util.List;
 import omniapi.OmniScript;
 import omniapi.api.Constants;
 import omniapi.api.OmniScriptEmulator;
+import omniapi.data.NPC;
 
-public class NPCs extends OmniScriptEmulator<OmniScript> {
+public class NPCs extends Collector<NPC> {
 
-	private List<NPC> cache;
-	private long lastCacheTime;
-	
 	public NPCs(OmniScript script) {
 		super(script);
-		cache = new ArrayList<NPC>();
+		cache = new ArrayList<>();
 		lastCacheTime = 0;
 	}
 
+	@Override
 	public List<NPC> getAll() {
 		if (System.currentTimeMillis() > lastCacheTime + (Constants.TICK / 2)) {
 			cache.clear();

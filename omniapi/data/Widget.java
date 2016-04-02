@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 
+import omniapi.data.def.DefaultWidget;
 import org.osbot.rs07.api.ui.Option;
 
 import omniapi.OmniScript;

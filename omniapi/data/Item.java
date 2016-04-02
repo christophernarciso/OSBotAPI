@@ -2,6 +2,7 @@ package omniapi.data;
 
 import omniapi.OmniScript;
 import omniapi.api.OmniScriptEmulator;
+import omniapi.data.def.DefaultWidget;
 
 public class Item extends OmniScriptEmulator<OmniScript> implements VirtualBase {
 

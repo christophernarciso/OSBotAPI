@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-import omniapi.data.DefaultItem;
+import omniapi.data.def.DefaultItem;
 import omniapi.data.Item;
 
 public class InventoryFinder extends VirtualFinder<Item> {

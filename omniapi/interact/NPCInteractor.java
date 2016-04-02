@@ -1,8 +1,6 @@
 package omniapi.interact;
 
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.osbot.rs07.api.model.Item;
@@ -10,8 +8,6 @@ import org.osbot.rs07.api.ui.Option;
 import org.osbot.rs07.api.util.GraphicUtilities;
 
 import omniapi.OmniScript;
-import omniapi.api.Constants;
-import omniapi.data.DefaultNPC;
 import omniapi.data.NPC;
 
 public class NPCInteractor extends Interactor<NPC> {

@@ -10,6 +10,7 @@ import omniapi.interact.EntityInteractor;
 
 import org.osbot.rs07.api.map.Position;
 import org.osbot.rs07.api.ui.RS2Widget;
+import org.osbot.rs07.script.Script;
 import org.osbot.rs07.script.ScriptManifest;
 
 @ScriptManifest(author = "Bobrocket", info = "testing", logo = "", name = "OmniAPI", version = 0)
@@ -18,6 +19,8 @@ public class Test extends OmniScript {
 	@Override
 	public void onStart() {
 		setLogLevel(LogLevel.WARN);
+		//getWebWalker().addNode(new Position(3080, 3249, 0), "Master farmer", "Pickpocket");
+		//getWebWalker().addNode(new Position(3268, 3410, 0), "Tea stall", "Steal-from");
 	}
 
 	//Widget depositAll;
@@ -27,8 +30,14 @@ public class Test extends OmniScript {
 	@Override
 	public int onLoop() throws InterruptedException {
 		
-		if (getNPCFinder().findClosest("Man", (npc) -> (getMap().canReach(npc.getPosition()))).interact("Talk-to")) successfulInteractions++;
-		else failedInteractions++;
+		//if (getNPCFinder().findClosest("Man", (npc) -> (getMap().canReach(npc.getPosition()))).interact("Talk-to")) successfulInteractions++;
+		//else failedInteractions++;
+		
+		//getWidgetFinder().findFromText("Gold amulet", (w) -> (w.getRootId() == 162)).interact();
+		//getRSGrandExchange().createBuyOffer("Gold amulet", 2, 150);
+		
+		//debug(getWebWalker().walkAndInteract("Tea stall", "Steal-from")); //debug(getWebWalker().interactWith(getWebWalker().getClosest("Master farmer"), "Pickpocket", (target) -> (target.getName().equalsIgnoreCase("master farmer"))));
+		//debug(getWebWalker().walkPath(new Position(3218, 3218, 0)));
 		
 		//debug(getRSGrandExchange().getItemNameBySlot(0));
 		//debug(getRSGrandExchange().getAvailableSlots());
@@ -49,14 +58,10 @@ public class Test extends OmniScript {
 		//sleep(Constants.TICK * 2);
 		//debug(getWidgetFinder().findFromAction("Close", (widget) -> (widget.getSpriteIndex1() == 535)).interact());
 		//log(w.getInteractOptions());
-		return Constants.TICK;
+		return Constants.TICK * 4;
 	}
 
 	@Override
 	public void onPaint(Graphics2D g) {
-		g.drawString("OmniAPI Interaction test: moving npc", 100, 100);
-		g.drawString("Successful: " + successfulInteractions, 100, 150);
-		g.drawString("Failed: " + failedInteractions, 100, 200);
-		g.drawString("%: " + (float)(((failedInteractions) / (failedInteractions + successfulInteractions)) * 100), 100, 250);
 	}
 }

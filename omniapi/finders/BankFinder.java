@@ -1,13 +1,12 @@
 package omniapi.finders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-import omniapi.data.DefaultItem;
+import omniapi.data.def.DefaultItem;
 import omniapi.data.Item;
 
 public class BankFinder extends VirtualFinder<Item> {

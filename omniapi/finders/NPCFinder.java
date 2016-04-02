@@ -5,8 +5,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import omniapi.OmniScript;
-import omniapi.data.DefaultNPC;
+import omniapi.data.def.DefaultNPC;
 import omniapi.data.NPC;
+import org.osbot.rs07.api.map.Position;
+import org.osbot.rs07.api.util.GraphicUtilities;
 
 public class NPCFinder extends PhysicalFinder<NPC> {
 
@@ -42,6 +44,5 @@ public class NPCFinder extends PhysicalFinder<NPC> {
 			case CLOSEST_GAMETILES: case FURTHEST_GAMETILES: return ((one, two) -> Integer.compare(getMap().distance(one.getPosition()), getMap().distance(two.getPosition())));
 		}
 	}
-
 
 }

@@ -3,10 +3,8 @@ package omniapi.interfaces;
 import org.osbot.rs07.api.def.ItemDefinition;
 
 import omniapi.OmniScript;
+import omniapi.api.Constants;
 import omniapi.api.OmniScriptEmulator;
-import omniapi.data.DefaultEntity;
-import omniapi.data.DefaultItem;
-import omniapi.data.DefaultNPC;
 import omniapi.data.Entity;
 import omniapi.data.NPC;
 import omniapi.data.Widget;
@@ -62,9 +60,9 @@ public class RSGrandExchange extends OmniScriptEmulator<OmniScript> implements R
 		
 		Entity bankEntity = getEntityFinder().find((entity) -> (entity.hasAction("Exchange")));
 		
-		if (bankEntity instanceof DefaultEntity) {
+		if (!bankEntity.exists()) {
 			NPC bankNPC = getNPCFinder().find((npc) -> (npc.hasAction("Exchange")));
-			if (bankNPC instanceof DefaultNPC) return false;
+			if (!bankNPC.exists()) return false;
 			if (!bankNPC.interact("Exchange")) return false;
 			return sleepUntil(() -> (isOpen()));
 		}
@@ -84,7 +82,72 @@ public class RSGrandExchange extends OmniScriptEmulator<OmniScript> implements R
 		return sleepUntil(() -> (!isOpen()));
 	}
 	
-	public boolean createOffer(Item item, int price) throws InterruptedException {
+	public boolean createBuyOffer(String itemName, int qty, int price) throws InterruptedException {
+		if (itemName == null || itemName.length() < 1) return false;
+		if (qty < 1 || price < 1) return false;
+		
+		if (!isOpen()) open();
+		
+		Widget buyOffer = getWidgetFinder().find((widget) -> (widget.getRootId() == getRootID() && widget.getSpriteIndex1() == 1108));
+		if (!buyOffer.exists() || !buyOffer.interact()) return false;
+		
+		sleepUntil(() -> (getWidgetFinder().findFromText("Buy offer", (widget) -> (widget.getRootId() == getRootID())).exists()));
+		
+		for (String word : itemName.split(" ")) {
+			sleep(rand(Constants.TICK, (int)(Constants.TICK * 1.5)));
+			getKeyboard().typeString(word);
+			Widget itemWidget = getWidgetFinder().findFromText(itemName, (widget) -> (widget.getRootId() == 162));
+			if (!sleepUntil(() -> (itemWidget.exists() && itemWidget.getThirdLevelId() <= 25), 800)) {
+				getKeyboard().typeKey((char) 32);
+				continue;
+			}
+			if (!itemWidget.interact()) return false;
+			break;
+		}
+		
+		if (!sleepUntil(() -> (getWidgetFinder().findFromText(itemName).exists() && getWidgetFinder().getLastFound().getRootId() == getRootID() && getWidgetFinder().getLastFound().getSecondLevelId() == 23))) return false;
+		
+		int medianPrice = Integer.valueOf(getWidgetFinder().find((widget) -> (widget.getMessage().endsWith(" coins") && widget.getRootId() == getRootID() && widget.getSecondLevelId() == 23)).getMessage().split(" ")[0]);
+		
+		if (price != medianPrice) {
+			sleep(rand((int)(Constants.TICK / 2), Constants.TICK));
+			Widget enterPrice = getWidgetFinder().findFromAction("Enter price", (widget) -> (widget.getSpriteIndex1() == 1110));
+			if (!enterPrice.exists() || !enterPrice.interact()) return false;
+			
+			Widget setPrice = getWidgetFinder().get(162, 31); //Widget setPrice = getWidgetFinder().findFromText("Set a price for each item:");
+			sleepUntil(() -> (setPrice.exists()));
+			
+			getKeyboard().typeString(String.valueOf(price));
+			
+			sleepUntil(() -> (!setPrice.exists()));
+		}
+		
+		if (qty > 1) {
+			sleep(rand((int)(Constants.TICK / 2), Constants.TICK));
+			Widget enterQuantity = getWidgetFinder().findFromAction("Enter quantity", (widget) -> (widget.getSpriteIndex1() == 1110));
+			if (!enterQuantity.interact()) return false;
+			
+			Widget setPrice = getWidgetFinder().get(162, 31); //Widget setPrice = getWidgetFinder().findFromText("Set a price for each item:");
+			sleepUntil(() -> (setPrice.exists()));
+			
+			getKeyboard().typeString(String.valueOf(qty));
+			
+			sleepUntil(() -> (!setPrice.exists()));
+		}
+		
+		sleep(rand((int)(Constants.TICK / 2), Constants.TICK));
+		
+		Widget confirmButton = getWidgetFinder().findFromAction("Confirm", (widget) -> (widget.getRootId() == getRootID()));
+		if (!confirmButton.interact()) return false;
+		
+		return sleepUntil(() -> (!confirmButton.exists()));
+	}
+	
+	public boolean createSellOffer(String itemName, int price) throws InterruptedException {
+		return createSellOffer(getInventoryFinder().find(itemName), price);
+	}
+	
+	public boolean createSellOffer(Item item, int price) throws InterruptedException {
 		if (!item.exists()) return false;
 		if (!isOpen()) open();
 		

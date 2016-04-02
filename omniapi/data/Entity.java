@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import omniapi.data.def.DefaultEntity;
 import org.osbot.rs07.api.def.EntityDefinition;
 import org.osbot.rs07.api.map.Area;
 import org.osbot.rs07.api.map.Position;
@@ -178,16 +179,19 @@ public class Entity extends OmniScriptEmulator<OmniScript> implements PhysicalBa
 
 	@Override
 	public Position getPosition() {
+		if (!exists()) return new Position(-1, -1, -1);
 		return child.getPosition();
 	}
 
 	@Override
 	public Model getModel() {
+		if (!exists()) return null;
 		return child.getModel();
 	}
 
 	@Override
 	public Area getArea(int z) {
+		if (!exists()) return new Area(-1, -1, -1, -1);
 		return child.getArea(z);
 	}
 

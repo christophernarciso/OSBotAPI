@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import omniapi.data.PhysicalBase;
 import org.osbot.rs07.api.model.Item;
 import org.osbot.rs07.api.ui.Option;
 import org.osbot.rs07.api.util.GraphicUtilities;
@@ -12,9 +13,9 @@ import org.osbot.rs07.api.util.GraphicUtilities;
 import omniapi.OmniScript;
 import omniapi.data.Entity;
 
-public class EntityInteractor extends Interactor<Entity> {
+public class EntityInteractor extends Interactor<PhysicalBase> {
 
-	private Entity target;
+	private PhysicalBase target;
 	private Rectangle rect;
 	private Item item;
 	
@@ -23,7 +24,7 @@ public class EntityInteractor extends Interactor<Entity> {
 	}
 
 	//setEntity(...).setItem(...).shrinkRectangle(...).do()
-	public EntityInteractor setEntity(Entity e) {
+	public EntityInteractor setEntity(PhysicalBase e) {
 		target = e;
 		rect = GraphicUtilities.getModelBoundingBox(getBot(), target.getGridX(), target.getGridY(), target.getZ(), target.getModel());
 		return this;
@@ -64,7 +65,7 @@ public class EntityInteractor extends Interactor<Entity> {
 			debug("Clicked");
 			interaction = "Use " + item.getName() + " -> " + target.getName(); 
 		}
-		while (!getMouse().isOnCursor(target.getRaw())) target.hover();
+		 if (!target.hover()) return false;
 		
 		if (sleep) sleep(rand(1 * deviate, 10 * deviate));
 		

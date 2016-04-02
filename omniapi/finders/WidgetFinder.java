@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import omniapi.OmniScript;
-import omniapi.data.DefaultWidget;
+import omniapi.data.def.DefaultWidget;
 import omniapi.data.Widget;
 
 public class WidgetFinder extends VirtualFinder<Widget> {

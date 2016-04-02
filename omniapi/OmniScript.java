@@ -1,13 +1,16 @@
 package omniapi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import omniapi.api.modules.Module;
 import omniapi.api.nodes.NodeHandler;
 import omniapi.api.sleep.SleepCondition;
 import omniapi.api.sleep.Sleeper;
-import omniapi.data.Entities;
-import omniapi.data.NPCs;
-import omniapi.data.Widgets;
+import omniapi.data.collection.Entities;
+import omniapi.data.collection.NPCs;
+import omniapi.data.collection.Widgets;
 import omniapi.debug.DebugLogger;
 import omniapi.debug.LogLevel;
 import omniapi.finders.BankFinder;
@@ -17,9 +20,7 @@ import omniapi.finders.NPCFinder;
 import omniapi.finders.WidgetFinder;
 import omniapi.interfaces.RSBank;
 import omniapi.interfaces.RSGrandExchange;
-import omniapi.webwalker.WebWalker;
-import omniapi.webwalker.web.Web;
-import omniapi.webwalker.web.pathfinder.impl.AStarPathfinder;
+import omniapi.webwalker.OmniWebWalker;
 
 import org.osbot.rs07.script.Script;
 
@@ -38,26 +39,39 @@ public abstract class OmniScript extends Script {
 	private DebugLogger logger;
 	private Sleeper sleeper = new Sleeper(this, 25);
 	private NodeHandler nodeHandler = new NodeHandler(this);
+
+	private List<Module> moduleList = new ArrayList<>();
 	
 	/* Interfaces */
 	private RSBank rsBank = new RSBank(this);
 	private RSGrandExchange rsGrandExchange = new RSGrandExchange(this);
-	
-	//Valks webwalker :D
-	private WebWalker webWalker;
+
+	private OmniWebWalker webWalker;
+
+	private static OmniScript instance;
 	
 	public OmniScript() {
 		logger = new DebugLogger(this);
 		//log("Thanks for using OmniAPI!");
+		webWalker = new OmniWebWalker(this);
+		instance = this;
+	}
+	
+	/*@Override
+	public void onStart() {
+		logger = new DebugLogger(this);
+		log("Thanks for using OmniAPI!");
 		webWalker = new WebWalker(this);
 	}
+	
+	public abstract void start();*/
 	
 	/* Getters */
 	public boolean isIdle() {
 		return !myPlayer().isMoving() && !myPlayer().isAnimating() && !getCombat().isFighting() && !getDialogues().inDialogue();
 	}
 	
-	public WebWalker getWebWalker() {
+	public OmniWebWalker getWebWalker() {
 		return webWalker;
 	}
 	
@@ -147,7 +161,11 @@ public abstract class OmniScript extends Script {
 	public NodeHandler getNodeHandler() {
 		return nodeHandler;
 	}
-	
+
+	protected void addModule(Module m) { moduleList.add(m); }
+
+	public List<Module> getModuleList() { return moduleList; }
+
 	/* Random functions */
 	public int getRandom(int min, int max) {
 		int range = (max - min) + 1;
@@ -164,5 +182,9 @@ public abstract class OmniScript extends Script {
 			n = (int) Math.round(val);
 		} while (n < min || n > max);
 		return n;
+	}
+
+	public static OmniScript getInstance() {
+		return instance;
 	}
 }
