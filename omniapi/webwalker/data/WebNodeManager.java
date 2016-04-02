@@ -22,7 +22,7 @@ public class WebNodeManager extends OmniScriptEmulator<OmniScript> {
         for (String line : lines) {
             if (line.contains(",")) {
                 //script.log(line);
-                map.add(new WebNode(line));
+                map.add(new WebNode(script, line));
             }
         }
     }
